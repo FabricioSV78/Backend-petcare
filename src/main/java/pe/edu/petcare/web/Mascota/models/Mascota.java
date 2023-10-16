@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pe.edu.petcare.web.HistorialMedico.models.HistorialMedico;
 
 
 import java.time.LocalDate;
@@ -26,8 +27,8 @@ public class Mascota {
     private String peso;
 
 
-    /*@OneToOne(mappedBy = "mascota", cascade = CascadeType.ALL, orphanRemoval = true)
-    private HistorialMedico historialMedico;*/
+    @OneToOne(mappedBy = "mascota", cascade = CascadeType.ALL, orphanRemoval = true)
+    private HistorialMedico historialMedico;
 
 }
 
