@@ -1,5 +1,5 @@
 package pe.edu.upao.petcare.web.consejo.services;
-/*
+
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,4 +17,3 @@ public class ConsejoDTO {
     public ConsejoDTO(String descripcionC) {
     }
 }
-*/

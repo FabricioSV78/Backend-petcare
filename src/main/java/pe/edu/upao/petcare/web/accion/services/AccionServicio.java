@@ -14,9 +14,20 @@ import pe.edu.upao.petcare.web.tarea.models.Tarea;
 import pe.edu.upao.petcare.web.tarea.repositories.RepositorioTarea;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AccionServicio {
+
+    @Autowired
+    private RepositorioAccion repositorioAccion;
+
+    public List<Accion.AccionEstado> obtenerEstadoPorIdTarea(Long idTarea) {
+        List<Accion> acciones = repositorioAccion.findByTarea_IdTarea(idTarea);
+        return acciones.stream().map(Accion::getEstado).collect(Collectors.toList());
+    }
 
 
 }

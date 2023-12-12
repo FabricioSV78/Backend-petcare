@@ -28,7 +28,7 @@ public class Mascota {
     private TipoMascota tipoMascota;
 
     private String nombreMascota;
-    private LocalDate fechaNMascota;
+    private String fechaNMascota;
 
     private String genero;
 

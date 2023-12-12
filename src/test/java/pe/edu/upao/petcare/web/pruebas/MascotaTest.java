@@ -43,7 +43,7 @@ public class MascotaTest {
     @Test
     void cuandoLosDatosSonValidosEntoncesCreaPerfilMascota() {
         // Arrange
-        MascotaDTO mascotaDTO = new MascotaDTO(1L, 1L, "Firulais", LocalDate.now(), "Hembra", true, 5.0f);
+        MascotaDTO mascotaDTO = new MascotaDTO(1L, 1L, "Firulais", "20/12/2023", "Hembra", true, 5.0f);
         Mascota mascotaEsperada = new Mascota();
 
         when(repositorioTipoMascota.findById(anyLong())).thenReturn(Optional.of(new TipoMascota()));
@@ -61,7 +61,7 @@ public class MascotaTest {
     @Test
     void cuandoElNombreDeLaMascotaEsNuloOVacioEntoncesLanzaExcepcion() {
         // Arrange
-        MascotaDTO mascotaDTO = new MascotaDTO(1L, 1L, "", LocalDate.now(), "Macho", true, 5.0f);
+        MascotaDTO mascotaDTO = new MascotaDTO(1L, 1L, "", "9/12/2023", "Macho", true, 5.0f);
 
         // Act & Assert
         assertThrows(DatosNoValidosException.class, () -> mascotaServicio.crearPerfilMascota(mascotaDTO));
@@ -73,7 +73,7 @@ public class MascotaTest {
         // Arrange
         MascotaDTO mascotaDTO = new MascotaDTO();
         mascotaDTO.setNombreMascota("Rocky");
-        mascotaDTO.setFechaNMascota(LocalDate.now());
+        mascotaDTO.setFechaNMascota("20/12/2023");
         mascotaDTO.setIdTipoMascota(1L);
         mascotaDTO.setIdCliente(1L);
         mascotaDTO.setGenero("Indefinido");  // Un género inválido para esta prueba
@@ -110,7 +110,7 @@ public class MascotaTest {
         // Arrange
         Long idMascota = 1L;
         Mascota mascotaExistente = new Mascota();
-        MascotaDTO mascotaDTO = new MascotaDTO(1L, 1L, "Firulais", LocalDate.now(), "Macho", true, 5.0f);
+        MascotaDTO mascotaDTO = new MascotaDTO(1L, 1L, "Firulais", "10/12/2023", "Macho", true, 5.0f);
 
         when(repositorioMascota.findById(idMascota)).thenReturn(Optional.of(mascotaExistente));
         when(repositorioTipoMascota.findById(anyLong())).thenReturn(Optional.of(new TipoMascota()));

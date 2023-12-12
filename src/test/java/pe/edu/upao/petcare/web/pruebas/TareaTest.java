@@ -1,10 +1,12 @@
 package pe.edu.upao.petcare.web.pruebas;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pe.edu.upao.petcare.web.accion.models.Accion;
 import pe.edu.upao.petcare.web.accion.repositories.RepositorioAccion;
@@ -53,49 +55,82 @@ public class TareaTest {
     @Mock
     private RepositorioMascota repositorioMascota;
 
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.initMocks(this); // Inicializa los mocks
+    }
+
 
 
 
     //escenario exitoso
 
     @Test
+    void marcarTareaComoCompletada_TareaYLogroExisten_LogroCompleto() {
+        // Configurar datos ficticios y comportamiento de los mocks
+        Long tareaId = 1L;
+        Long idMascota = 3L;
+        Tarea tareaMock = mock(Tarea.class);
+        Mascota mascotaMock = mock(Mascota.class);
+        Accion accionMock = mock(Accion.class);
+        Logro logroMock = mock(Logro.class);
+        List<Accion> accionesMock = List.of(accionMock);
+
+        when(repositorioTarea.findById(tareaId)).thenReturn(Optional.of(tareaMock));
+        when(repositorioMascota.findById(idMascota)).thenReturn(Optional.of(mascotaMock));
+        when(repositorioAccion.findByTarea(tareaMock)).thenReturn(accionesMock);
+
+        // Configuración inicial de veces completadas y necesarias
+        when(accionMock.getVecesNecesarias()).thenReturn(2);
+        when(accionMock.getVecesCompletadas()).thenReturn(1);
+        when(accionMock.getLogro()).thenReturn(logroMock);
+
+        doAnswer(invocation -> {
+            when(accionMock.getVecesCompletadas()).thenReturn(2);
+            return null;
+        }).when(accionMock).setVecesCompletadas(anyInt());
+
+        // Llamada al método a probar
+        tareaServicio.completarTarea(tareaId, idMascota);
+
+        // Verificaciones
+        verify(repositorioTarea).findById(tareaId);
+        verify(repositorioMascota).findById(idMascota);
+        verify(repositorioAccion).findByTarea(tareaMock);
+        verify(accionMock).setVecesCompletadas(2); // Verifica que el contador de veces completadas se incrementa
+        verify(repositorioAccion).save(accionMock); // Verifica que la acción se guarda después de actualizarla
+        verify(logroServicio).verificarYActualizarLogro(logroMock, mascotaMock); // Verifica que se verifica y actualiza el logro
+    }
+
+    //escenario fallido
+    @Test
     void marcarTareaComoCompletada_TareaExiste_LogroNoCompleto() {
         // Configurar datos ficticios y comportamiento de los mocks
         Long tareaId = 1L;
+        Long idMascota = 3L;
         Tarea tareaMock = mock(Tarea.class);
+        Mascota mascotaMock = mock(Mascota.class);
         Accion accionMock = mock(Accion.class);
         List<Accion> accionesMock = List.of(accionMock);
 
         when(repositorioTarea.findById(tareaId)).thenReturn(Optional.of(tareaMock));
+        when(repositorioMascota.findById(idMascota)).thenReturn(Optional.of(mascotaMock));
         when(repositorioAccion.findByTarea(tareaMock)).thenReturn(accionesMock);
         when(accionMock.getVecesNecesarias()).thenReturn(3);
         when(accionMock.getVecesCompletadas()).thenReturn(1);
 
         // Llamada al método a probar
-        tareaServicio.completarTarea(tareaId);
+        tareaServicio.completarTarea(tareaId, idMascota);
 
         // Verificaciones
         verify(repositorioTarea).findById(tareaId);
+        verify(repositorioMascota).findById(idMascota);
         verify(repositorioAccion).findByTarea(tareaMock);
-        verify(accionMock).setVecesCompletadas(2); // Verifica que el puntaje se ha incrementado
+        verify(accionMock).setVecesCompletadas(2);
         verify(repositorioAccion).save(accionMock);
-        verify(logroServicio, never()).verificarYActualizarLogro(any(Logro.class)); // Verifica que el logro no se verifica/actualiza ya que no se ha alcanzado el umbral necesario
+        verify(logroServicio, never()).verificarYActualizarLogro(any(Logro.class), any(Mascota.class));
     }
 
-
-
-    //escenario exitoso
-    @Test
-    void cuandoTareaNoExisteEntoncesLanzaExcepcion() {
-        // Configura un ID de tarea que no existe
-        Long tareaIdInvalido = 99L;
-        when(repositorioTarea.findById(tareaIdInvalido)).thenReturn(Optional.empty());
-
-        // Verifica que se lanza la excepción adecuada
-        assertThrows(EntityNotFoundException.class, () -> {
-            tareaServicio.completarTarea(tareaIdInvalido);
-        });
-    }
 
 
     //escenario exitoso

@@ -3,6 +3,7 @@ package pe.edu.upao.petcare.web.accion.models;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import pe.edu.upao.petcare.web.logro.models.Logro;
 import pe.edu.upao.petcare.web.mascota.models.Mascota;
@@ -16,27 +17,10 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Accion {
-    /*
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long idAccion;
 
-        private int puntajeObtenido;
-
-        @Temporal(TemporalType.TIMESTAMP)
-        private Date fechaAccion;
-
-        @ManyToOne
-        @JoinColumn(name = "idTarea")
-        private Tarea tarea;
-
-        @ManyToOne
-        @JoinColumn(name = "idMascota")
-        private Mascota mascota;
-    */
-@Id
-@GeneratedValue(strategy = GenerationType.AUTO)
-private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "idLogro")
@@ -62,5 +46,27 @@ private Long id;
 
     public void incrementarVecesCompletadas() {
         this.vecesCompletadas++;
+    }
+
+
+
+
+    // Este método devuelve un objeto que contiene las veces necesarias y las veces completadas.
+    public AccionEstado getEstado() {
+        return new AccionEstado(this.vecesNecesarias, this.vecesCompletadas);
+    }
+
+    // Clase interna que se utiliza para devolver el estado de la acción.
+    @Getter
+    public static class AccionEstado {
+        // Getters
+        private final int vecesNecesarias;
+        private final int vecesCompletadas;
+
+        public AccionEstado(int vecesNecesarias, int vecesCompletadas) {
+            this.vecesNecesarias = vecesNecesarias;
+            this.vecesCompletadas = vecesCompletadas;
+        }
+
     }
 }

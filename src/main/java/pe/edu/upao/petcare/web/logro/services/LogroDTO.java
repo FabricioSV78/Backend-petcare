@@ -27,6 +27,13 @@ public class LogroDTO {
     }
 
 
+    public LogroDTO(String nombreLogro, String descripcion) {
+        this.nombreLogro=nombreLogro;
+        this.descripcion=descripcion;
+
+    }
+
+
     public LogroDTO(String nombreLogro, String descripcion, boolean completado) {
         this.nombreLogro=nombreLogro;
         this.descripcion=descripcion;

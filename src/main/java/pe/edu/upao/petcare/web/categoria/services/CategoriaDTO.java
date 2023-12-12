@@ -15,11 +15,5 @@ import java.util.List;
 public class CategoriaDTO {
     private String nombreCategoria;
 
-    private List<TareaDTO> tareasPendientes;
-
-
-    public CategoriaDTO(String nombreCategoria) {
-    }
-
 
 }

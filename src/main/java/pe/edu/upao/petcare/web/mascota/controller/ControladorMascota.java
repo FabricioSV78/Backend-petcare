@@ -5,12 +5,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upao.petcare.web.excepciones.DatosNoValidosException;
+import pe.edu.upao.petcare.web.logro.services.LogroDTO;
 import pe.edu.upao.petcare.web.logro.services.LogroServicio;
 import pe.edu.upao.petcare.web.mascota.models.Mascota;
 import pe.edu.upao.petcare.web.mascota.services.MascotaDTO;
 import pe.edu.upao.petcare.web.excepciones.MascotaNoEncontradaException;
 import pe.edu.upao.petcare.web.mascota.services.MascotaServicio;
 import pe.edu.upao.petcare.web.tarea.services.TareaServicio;
+
+import java.util.List;
 
 @RestController
 public class ControladorMascota {
@@ -51,23 +54,6 @@ public class ControladorMascota {
         }
     }
 
-    /*@PutMapping("/mascotas/{id_mascota}")
-    public ResponseEntity<?> modificarPerfilMascota(
-            @PathVariable Long idMascota,
-            @RequestBody MascotaDTO mascotaDTO) {
-
-        try {
-            Mascota mascotaModificada = mascotaServicio.modificarPerfilMascota(idMascota, mascotaDTO);
-            if (mascotaModificada != null) {
-                return new ResponseEntity<>(mascotaModificada, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-            }
-        } catch (MascotaNoEncontradaException e) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
-    }*/
-
     @PutMapping("/mascotas/{idMascota}") // Asegúrate de que el nombre de la variable coincida aquí.
     public ResponseEntity<?> modificarPerfilMascota(
             @PathVariable("idMascota") Long idMascota, // Añade el nombre de la variable en la anotación si es diferente al nombre del parámetro.
@@ -82,6 +68,18 @@ public class ControladorMascota {
             // Es recomendable manejar todas las excepciones potenciales para evitar que detalles del sistema se filtren.
             return new ResponseEntity<>("Ocurrió un error inesperado al modificar el perfil de la mascota.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("/{idMascota}/logros/completados")
+    public ResponseEntity<List<LogroDTO>> obtenerLogrosCompletados(@PathVariable Long idMascota) {
+        List<LogroDTO> logrosCompletados = mascotaServicio.obtenerLogrosCompletadosDeMascota(idMascota);
+        return ResponseEntity.ok(logrosCompletados);
+    }
+
+    @GetMapping("/{idMascota}/felicidad")
+    public ResponseEntity<Integer> obtenerFelicidadMascota(@PathVariable Long idMascota) {
+        int felicidad = mascotaServicio.obtenerFelicidadMascota(idMascota);
+        return ResponseEntity.ok(felicidad);
     }
 
 

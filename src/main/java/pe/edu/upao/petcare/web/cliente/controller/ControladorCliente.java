@@ -3,12 +3,19 @@ package pe.edu.upao.petcare.web.cliente.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
+
 import pe.edu.upao.petcare.web.cliente.models.Cliente;
+
 import pe.edu.upao.petcare.web.cliente.repositories.RepositorioCliente;
-import pe.edu.upao.petcare.web.cliente.services.Autenticacion;
-import pe.edu.upao.petcare.web.cliente.services.InicioSesionMapper;
 import pe.edu.upao.petcare.web.cliente.services.RegistroMapper;
+import pe.edu.upao.petcare.web.cliente.services.InicioSesionMapper;
+import pe.edu.upao.petcare.web.cliente.services.Autenticacion;
+
+
+import java.util.HashMap;
+import java.util.Optional;
 
 
 @RestController

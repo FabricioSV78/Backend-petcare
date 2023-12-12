@@ -1,5 +1,5 @@
 package pe.edu.upao.petcare.web.consejo.models;
-/*
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,13 +19,8 @@ public class Consejo {
 
     private String descripcionC;
 
-    // Si deseas asociar consejos a un tipo específico de mascota
-    @ManyToOne
-    @JoinColumn(name = "idTipoMascota")
-    private TipoMascota tipoMascota;
 
-
-
-
+    public Consejo(String descripcionC) {
+        this.descripcionC=descripcionC;
+    }
 }
-*/

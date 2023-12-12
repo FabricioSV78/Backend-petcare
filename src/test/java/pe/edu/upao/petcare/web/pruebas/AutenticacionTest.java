@@ -29,8 +29,8 @@ public class AutenticacionTest {
     @Test
     void cuandoLosDatosSonValidosEntoncesRegistraCliente() {
         // Datos de prueba válidos
-        RegistroMapper registroMapper = new RegistroMapper("Juan", "Perez", "123456789", new Date(), "Masculino", "juan.perez@example.com", "password123");
-        Cliente clienteEsperado = new Cliente("Juan", "Perez", "123456789", new Date(), "Masculino", "juan.perez@example.com", "password123");
+        RegistroMapper registroMapper = new RegistroMapper("Juan", "Perez", "123456789", "Masculino", "juan.perez@example.com", "password123");
+        Cliente clienteEsperado = new Cliente("Juan", "Perez", "123456789", "Masculino", "juan.perez@example.com", "password123");
 
         when(repositorioCliente.save(any(Cliente.class))).thenReturn(clienteEsperado);
 
@@ -45,7 +45,7 @@ public class AutenticacionTest {
     @Test
     void cuandoElTelefonoNoTieneNueveDigitosEntoncesLanzaExcepcion() {
         // Datos de prueba con teléfono inválido
-        RegistroMapper registroMapper = new RegistroMapper("Juan", "Perez", "12345", new Date(), "Masculino", "juan.perez@example.com", "password123");
+        RegistroMapper registroMapper = new RegistroMapper("Juan", "Perez", "12345", "Masculino", "juan.perez@example.com", "password123");
 
         // Verifica que se lanza la excepción
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -58,7 +58,7 @@ public class AutenticacionTest {
     @Test
     void cuandoElCorreoNoTieneArrobaEntoncesLanzaExcepcion() {
         // Datos de prueba con correo inválido
-        RegistroMapper registroMapper = new RegistroMapper("Juan", "Perez", "123456789", new Date(), "Masculino", "juan.perezexample.com", "password123");
+        RegistroMapper registroMapper = new RegistroMapper("Juan", "Perez", "123456789", "Masculino", "juan.perezexample.com", "password123");
 
         // Verifica que se lanza la excepción
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {

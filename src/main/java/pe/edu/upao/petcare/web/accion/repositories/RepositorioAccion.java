@@ -15,10 +15,9 @@ import java.util.List;
 @Repository
 public interface RepositorioAccion extends JpaRepository<Accion, Long> {
 
-    //@Query("SELECT a.tarea FROM Accion a WHERE a.mascota.idMascota = :idMascota")
-    //List<Tarea> findTasksByMascotaId(@Param("idMascota") Long idMascota);
-
 
     List<Accion> findByTarea(Tarea tarea);
+
+    List<Accion> findByTarea_IdTarea(Long idTarea);
 }
 

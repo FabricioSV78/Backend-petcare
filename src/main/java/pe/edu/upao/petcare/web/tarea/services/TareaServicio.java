@@ -31,8 +31,6 @@ public class TareaServicio {
     @Autowired
     private RepositorioTarea repositorioTarea;
 
-    @Autowired
-    private RepositorioLogro repositorioLogro;
 
     @Autowired
     private LogroServicio logroServicio;
@@ -41,24 +39,15 @@ public class TareaServicio {
     private RepositorioAccion repositorioAccion;
 
     @Autowired
-    private RepositorioCategoria repositorioCategoria;
-
-    @Autowired
     private RepositorioMascota repositorioMascota;
 
-
-
-    // Método auxiliar para calcular el cambio en la felicidad
-    private int calcularValorFelicidad(Tarea tarea) {
-        // La lógica aquí dependerá de cómo quieres calcular la felicidad
-        // Por ejemplo, podría ser un valor fijo o basado en el puntaje de la tarea
-        return 5; // Supongamos que cada tarea aumenta la felicidad en 5 puntos
+    public TareaServicio(RepositorioTarea repositorioTarea, RepositorioMascota repositorioMascota, RepositorioAccion repositorioAccion, LogroServicio logroServicio) {
     }
 
 
     //----------------------NUEVO-----------------------------//
 
-    public void completarTarea(Long tareaId) {
+    /*public void completarTarea(Long tareaId) {
         Tarea tarea = repositorioTarea.findById(tareaId).orElseThrow(() -> new EntityNotFoundException("Tarea no encontrada con id: " + tareaId));
         List<Accion> requisitos = repositorioAccion.findByTarea(tarea);
 
@@ -70,30 +59,39 @@ public class TareaServicio {
                 logroServicio.verificarYActualizarLogro(requisito.getLogro());
             }
         }
-    }
+    }*/
 
-    public List<String> completarTareasYVerificarLogros(List<Long> idsTareas) {
-        Set<Logro> logrosPotencialmenteCompletados = new HashSet<>();
+    public void completarTarea(Long tareaId, Long idMascota) {
+        Tarea tarea = repositorioTarea.findById(tareaId)
+                .orElseThrow(() -> new EntityNotFoundException("Tarea no encontrada con id: " + tareaId));
 
-        for (Long idTarea : idsTareas) {
-            Tarea tarea = repositorioTarea.findById(idTarea).orElseThrow(/* excepción */);
-            List<Accion> requisitos = repositorioAccion.findByTarea(tarea);
+        Mascota mascota = repositorioMascota.findById(idMascota)
+                .orElseThrow(() -> new EntityNotFoundException("Mascota no encontrada con id: " + idMascota));
 
-            for (Accion requisito : requisitos) {
-                requisito.incrementarVecesCompletadas();
-                repositorioAccion.save(requisito);
+                List<Accion> requisitos = repositorioAccion.findByTarea(tarea);
 
-                if (requisito.getVecesCompletadas() >= requisito.getVecesNecesarias()) {
-                    logrosPotencialmenteCompletados.add(requisito.getLogro());
-                }
+        for (Accion requisito : requisitos) {
+            requisito.setVecesCompletadas(requisito.getVecesCompletadas() + 1);
+            repositorioAccion.save(requisito);
+
+            if (requisito.getVecesCompletadas() >= requisito.getVecesNecesarias()) {
+                logroServicio.verificarYActualizarLogro(requisito.getLogro(), mascota);
             }
         }
 
-        return logrosPotencialmenteCompletados.stream()
-                .filter(logro -> logro.isCompleto())
-                .map(Logro::getNombreLogro)
-                .collect(Collectors.toList());
+        actualizarMascotaDespuesDeCompletarTarea(mascota);
+
+
     }
+
+    private void actualizarMascotaDespuesDeCompletarTarea(Mascota mascota) {
+        // Aquí iría la lógica para actualizar la mascota.
+        // Por ejemplo, aumentar la felicidad:
+        mascota.aumentarFelicidad(5); // Suponiendo que completar una tarea incrementa la felicidad en 5 puntos.
+        repositorioMascota.save(mascota);
+    }
+
+
 
     public List<TareaDTO> obtenerTareasPorIdCategoria(Long idCategoria) {
         List<Tarea> tareas = repositorioTarea.findByCategoria_IdCategoria(idCategoria);
@@ -114,19 +112,7 @@ public class TareaServicio {
 
 
 
-    public TareaConProgresoDTO convertirATareaConProgresoDTO(Tarea tarea, Logro logro) {
-        if (logro == null) {
-            throw new IllegalArgumentException("El logro no puede ser nulo.");
-        }
-        int vecesCompletada = logro.getPuntajeActual(); // Esto asume que el puntaje actual del logro refleja las veces completadas
-        return new TareaConProgresoDTO(
-                tarea.getNombreTarea(),
-                logro.getPuntajeActual(), // Este valor debería ser el incrementado por el servicio
-                vecesCompletada, // Este debería ser calculado o incrementado adecuadamente
-                logro.getPuntajeTotal(),
-                logro.isCompletado()
-        );
-    }
+
 
 
 

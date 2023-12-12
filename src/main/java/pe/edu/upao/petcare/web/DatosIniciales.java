@@ -7,6 +7,8 @@ import pe.edu.upao.petcare.web.accion.models.Accion;
 import pe.edu.upao.petcare.web.accion.repositories.RepositorioAccion;
 import pe.edu.upao.petcare.web.categoria.models.Categoria;
 import pe.edu.upao.petcare.web.categoria.repositories.RepositorioCategoria;
+import pe.edu.upao.petcare.web.consejo.models.Consejo;
+import pe.edu.upao.petcare.web.consejo.repositories.RepositorioConsejo;
 import pe.edu.upao.petcare.web.logro.models.Logro;
 import pe.edu.upao.petcare.web.logro.repositories.RepositorioLogro;
 import pe.edu.upao.petcare.web.tarea.models.Tarea;
@@ -31,6 +33,9 @@ public class DatosIniciales {
 
     @Autowired
     private RepositorioAccion accionRepository;
+
+    @Autowired
+    private RepositorioConsejo repositorioConsejo;
 
     @Autowired
     private RepositorioTipoMascota repositorioTipoMascota;
@@ -130,11 +135,11 @@ public class DatosIniciales {
                 //---//
                 new Tarea("Proporciónale juguetes de estimulación mental, por lo menos 5 veces.", 100, logroBienestarMental, salud),
                 //---//
-                new Tarea("Realiza una rutina diaria de ejercicios que incluya al menos 20 minutos de de saltos y carreras, al menos 5 veces.", 100, logroAtletaCanino, ejercicio),
+                new Tarea("Realiza una rutina diaria de ejercicios que incluya al menos 20 minutos de saltos y carreras, al menos 5 veces.", 100, logroAtletaCanino, ejercicio),
                 //---//
-                new Tarea("Saltos sobre rocas y sesiones de entrenamiento en un parque. al menos 5 veces", 100, logroRutaNaturaleza, ejercicio),
+                new Tarea("LLeva a tu mascota al menos 3 veces a un parque y realiza ejercicios simples (puedes usar una pelota)", 100, logroRutaNaturaleza, ejercicio),
                 //---//
-                new Tarea("-", 100, logroDesafíoSalto, ejercicio),
+                new Tarea("Saltos sobre rocas y sesiones de entrenamiento en un parque. al menos 5 veces", 100, logroDesafíoSalto, ejercicio),
                 //---//
                 new Tarea("Mantén cada estiramiento durante al menos 15 segundos para mejorar la flexibilidad de tu mascota. al menos 3 veces.", 100, logroEstiramientoCanino, ejercicio),
                 //---//
@@ -162,9 +167,9 @@ public class DatosIniciales {
         Tarea tarea6 = tareaRepository.findByNombreTarea("Cepilla los dientes de tu mascota. 5 veces").orElse(null);
         Tarea tarea7 = tareaRepository.findByNombreTarea("Lleva a tu mascota a dar un paseo").orElse(null);
         Tarea tarea8 = tareaRepository.findByNombreTarea("Proporciónale juguetes de estimulación mental, por lo menos 5 veces.").orElse(null);
-        Tarea tarea9 = tareaRepository.findByNombreTarea("Realiza una rutina diaria de ejercicios que incluya al menos 20 minutos de de saltos y carreras, al menos 5 veces.").orElse(null);
-        Tarea tarea10 = tareaRepository.findByNombreTarea("Saltos sobre rocas y sesiones de entrenamiento en un parque. al menos 5 veces").orElse(null);
-        Tarea tarea11 = tareaRepository.findByNombreTarea("-").orElse(null);
+        Tarea tarea9 = tareaRepository.findByNombreTarea("Realiza una rutina diaria de ejercicios que incluya al menos 20 minutos de saltos y carreras, al menos 5 veces.").orElse(null);
+        Tarea tarea10 = tareaRepository.findByNombreTarea("LLeva a tu mascota al menos 3 veces a un parque y realiza ejercicios simples (puedes usar una pelota)").orElse(null);
+        Tarea tarea11 = tareaRepository.findByNombreTarea("Saltos sobre rocas y sesiones de entrenamiento en un parque. al menos 5 veces").orElse(null);
         Tarea tarea12 = tareaRepository.findByNombreTarea("Mantén cada estiramiento durante al menos 15 segundos para mejorar la flexibilidad de tu mascota. al menos 3 veces.").orElse(null);
         Tarea tarea13 = tareaRepository.findByNombreTarea("Anima a tu mascota a interactuar amigablemente, compartiendo juguetes virtuales y participando en actividades sociales.").orElse(null);
         Tarea tarea14 = tareaRepository.findByNombreTarea("Organiza juegos y actividades interactivas para que todos participen. Asegúrate de que tu mascota socialice con entusiasmo y sea el centro de atención").orElse(null);
@@ -183,8 +188,8 @@ public class DatosIniciales {
                 new Accion(logroBienestarMental, tarea8, 5, 0),
 
                 new Accion(logroAtletaCanino, tarea9, 5, 0),
-                new Accion(logroRutaNaturaleza, tarea10, 5, 0),
-                new Accion(logroDesafíoSalto, tarea11, 1, 0),
+                new Accion(logroRutaNaturaleza, tarea10, 3, 0),
+                new Accion(logroDesafíoSalto, tarea11, 5, 0),
                 new Accion(logroEstiramientoCanino, tarea12, 3, 0),
 
                 new Accion(logroMaestroSocialización, tarea13, 1, 0),
@@ -209,6 +214,15 @@ public class DatosIniciales {
 
         // Guardar los objetos TipoMascota en la base de datos
         repositorioTipoMascota.saveAll(tiposMascota);
+
+
+        List<Consejo> consejos = List.of(
+
+                new Consejo("Tener una mascota de manera responsable comienza con visitas regulares al veterinario.")
+        );
+
+        repositorioConsejo.saveAll(consejos);
+
 
 
 

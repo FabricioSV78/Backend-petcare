@@ -50,28 +50,18 @@ public class ControladorTarea {
         return new ResponseEntity<>(logros, HttpStatus.OK);
     }
 
-
-    // Endpoint para completar una sola tarea
-    @PostMapping("/tareas/completar/{tareaId}")
-    public ResponseEntity<?> completarTarea(@PathVariable Long tareaId) {
+    @PostMapping("/tareas/completar/{tareaId}/mascota/{mascotaId}")
+    public ResponseEntity<?> completarTarea(@PathVariable Long tareaId, @PathVariable Long mascotaId) {
         try {
-            tareaServicio.completarTarea(tareaId);
+            tareaServicio.completarTarea(tareaId, mascotaId);
             return new ResponseEntity<>("Tarea completada con éxito", HttpStatus.OK);
+        } catch (EntityNotFoundException enf) {
+            return new ResponseEntity<>("No se encontró la entidad: " + enf.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>("Error al completar la tarea: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    // Endpoint para completar múltiples tareas y verificar logros
-    /*@PostMapping("/tareas/completar-multiples")
-    public ResponseEntity<?> completarTareasYVerificarLogros(@RequestBody List<Long> idsTareas) {
-        try {
-            List<String> logrosCompletados = tareaServicio.completarTareasYVerificarLogros(idsTareas);
-            return new ResponseEntity<>(logrosCompletados, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Error al completar tareas: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }*/
 
 
     // Endpoint para obtener tareas por ID de categoría

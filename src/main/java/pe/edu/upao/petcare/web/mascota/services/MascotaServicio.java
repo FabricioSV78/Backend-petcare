@@ -1,7 +1,10 @@
 package pe.edu.upao.petcare.web.mascota.services;
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pe.edu.upao.petcare.web.accion.models.Accion;
 import pe.edu.upao.petcare.web.cliente.models.Cliente;
 import pe.edu.upao.petcare.web.cliente.repositories.RepositorioCliente;
 //import pe.edu.upao.petcare.web.consejo.services.ConsejoDTO;
@@ -153,46 +156,6 @@ public class MascotaServicio {
     }
 
 
-    /*public List<LogroDTO> obtenerLogrosCompletadosPorMascota(Long idMascota) {
-        // Obtener todos los logros de la mascota
-        List<Logro> logrosMascota = repositorioMascota.findLogrosByMascotaId(idMascota);
-
-        // Filtrar por los logros que están marcados como completados
-        List<Logro> logrosCompletados = logrosMascota.stream()
-                .filter(Logro::isCompletado)
-                .toList();
-
-        // Mapear a LogroMapper
-        List<LogroDTO> logrosCompletadosMapper = logrosCompletados.stream()
-                .map(this::convertirAlogroMapper)
-                .collect(Collectors.toList());
-
-        return logrosCompletadosMapper;
-    }*/
-
-    // Método auxiliar para convertir un Logro en LogroMapper
-    private LogroDTO convertirAlogroMapper(Logro logro) {
-        // Aquí debes mapear todos los atributos necesarios del Logro al LogroMapper
-        LogroDTO logroDTO = new LogroDTO(
-
-                logro.getNombreLogro(),
-                logro.getDescripcion(),
-                logro.getPuntajeTotal(),
-                logro.getPuntajeActual(),
-                logro.getProgreso(),
-                logro.isCompletado(),
-                logro.getCategoria().getNombreCategoria()  // Suponiendo que la entidad Logro tenga una relación con Categoria
-        );
-        return logroDTO;
-    }
-
-
-
-
-
-
-
-
 
     public Mascota obtenerMascotaPorNombre(String nombreMascota) {
         Mascota mascota = repositorioMascota.findByNombreMascota(nombreMascota);
@@ -202,12 +165,32 @@ public class MascotaServicio {
         return mascota;
     }
 
-    public Mascota obtenerMascotaPorId(Long idMascota) {
-        Mascota mascota = repositorioMascota.findByIdMascota(idMascota);
-        if (mascota == null) {
-            throw new MascotaNoEncontradaException("La mascota no se encontró en la base de datos.");
-        }
-        return mascota;
+    public List<LogroDTO> obtenerLogrosCompletadosDeMascota(Long idMascota) {
+        Mascota mascota = repositorioMascota.findById(idMascota)
+                .orElseThrow(() -> new EntityNotFoundException("Mascota no encontrada con id: " + idMascota));
+
+        return mascota.getLogros().stream()
+                .filter(Logro::isCompletado)
+                .map(this::convertirALogroDTO)
+                .collect(Collectors.toList());
+    }
+
+    // Método auxiliar para convertir un Logro en LogroMapper
+    private LogroDTO convertirALogroDTO(Logro logro) {
+        // Aquí debes mapear todos los atributos necesarios del Logro al LogroMapper
+        LogroDTO logroDTO = new LogroDTO(
+
+                logro.getNombreLogro(),
+                logro.getDescripcion()
+
+        );
+        return logroDTO;
+    }
+
+    public int obtenerFelicidadMascota(Long idMascota) {
+        Mascota mascota = repositorioMascota.findById(idMascota)
+                .orElseThrow(() -> new EntityNotFoundException("Mascota no encontrada con id: " + idMascota));
+        return mascota.getFelicidad();
     }
 
 

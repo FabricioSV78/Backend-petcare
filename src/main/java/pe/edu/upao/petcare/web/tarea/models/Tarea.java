@@ -30,9 +30,6 @@ public class Tarea {
     private int puntajeTarea;
 
 
-    // Frecuencia de la tarea en días
-    //private int frecuenciaEnDias;
-
 
     @ManyToOne
     @JoinColumn(name = "idLogro")
@@ -41,6 +38,11 @@ public class Tarea {
     @ManyToOne
     @JoinColumn(name = "idCategoria")
     private Categoria categoria;
+
+    @ManyToOne
+    @JoinColumn(name = "idMascota")
+    private Mascota mascota;
+
 
 
     public Tarea(String nombreTarea, int puntajeTarea, Logro logro, Categoria categoria) {

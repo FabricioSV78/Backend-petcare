@@ -17,7 +17,7 @@ public class MascotaDTO {
     private Long idTipoMascota;
     private Long idCliente;
     private String nombreMascota;
-    private LocalDate fechaNMascota;
+    private String fechaNMascota;
     private String genero;
     private boolean esterelizado;
     private Float peso;

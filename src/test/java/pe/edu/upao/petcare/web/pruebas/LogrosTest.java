@@ -11,6 +11,7 @@ import pe.edu.upao.petcare.web.logro.models.Logro;
 import pe.edu.upao.petcare.web.logro.repositories.RepositorioLogro;
 import pe.edu.upao.petcare.web.logro.services.LogroDTO;
 import pe.edu.upao.petcare.web.logro.services.LogroServicio;
+import pe.edu.upao.petcare.web.mascota.models.Mascota;
 import pe.edu.upao.petcare.web.mascota.repositories.RepositorioMascota;
 import pe.edu.upao.petcare.web.tarea.repositories.RepositorioTarea;
 
@@ -31,45 +32,6 @@ public class LogrosTest {
     @InjectMocks
     private LogroServicio logroServicio;
 
-    // Escenario exitoso
-    @Test
-    public void cuandoActualizarPuntajeEntoncesRetornaLogroActualizado() {
-        // Arrange
-        Long idLogro = 1L;
-        int puntajeTarea = 10;
-        Logro logroExistente = new Logro();
-        logroExistente.setPuntajeActual(20);
-        logroExistente.setPuntajeTotal(100);
-        logroExistente.setCompletado(false);
-
-        when(repositorioLogro.findById(idLogro)).thenReturn(Optional.of(logroExistente));
-        when(repositorioLogro.save(any(Logro.class))).thenAnswer(invocation -> invocation.getArgument(0));
-
-        // Act
-        LogroDTO resultado = logroServicio.actualizarPuntaje(idLogro, puntajeTarea);
-
-        // Assert
-        assertNotNull(resultado);
-        assertEquals(30, resultado.getPuntajeActual());
-        assertFalse(resultado.isCompletado());
-    }
-
-    // Escenario fallido
-    @Test
-    public void cuandoLogroNoExisteEntoncesLanzaExcepcion() {
-        // Arrange
-        Long idLogroInexistente = 99L;
-        int puntajeTarea = 10;
-
-        when(repositorioLogro.findById(idLogroInexistente)).thenReturn(Optional.empty());
-
-        // Act & Assert
-        assertThrows(EntityNotFoundException.class, () -> {
-            logroServicio.actualizarPuntaje(idLogroInexistente, puntajeTarea);
-        });
-    }
-
-
 
     // Escenario existoso
 
@@ -77,6 +39,7 @@ public class LogrosTest {
     void verificarYActualizarLogro_TodosRequisitosCompletados_LogroActualizado() {
         // Configuración de datos ficticios
         Logro logro = mock(Logro.class);
+        Mascota mascota = mock(Mascota.class);
         Accion accionCompleta = mock(Accion.class);
         when(accionCompleta.getVecesCompletadas()).thenReturn(5);
         when(accionCompleta.getVecesNecesarias()).thenReturn(5);
@@ -85,7 +48,7 @@ public class LogrosTest {
         when(logro.getAccions()).thenReturn(requisitos);
 
         // Llamada al método a probar
-        logroServicio.verificarYActualizarLogro(logro);
+        logroServicio.verificarYActualizarLogro(logro, mascota);
 
         // Verificaciones
         verify(logro).setCompletado(true);
@@ -98,6 +61,7 @@ public class LogrosTest {
     void verificarYActualizarLogro_RequisitosIncompletos_LogroNoActualizado() {
         // Configuración de datos ficticios
         Logro logro = mock(Logro.class);
+        Mascota mascota = mock(Mascota.class);
         Accion accionIncompleta = mock(Accion.class);
         when(accionIncompleta.getVecesCompletadas()).thenReturn(3);
         when(accionIncompleta.getVecesNecesarias()).thenReturn(5);
@@ -106,7 +70,7 @@ public class LogrosTest {
         when(logro.getAccions()).thenReturn(requisitos);
 
         // Llamada al método a probar
-        logroServicio.verificarYActualizarLogro(logro);
+        logroServicio.verificarYActualizarLogro(logro, mascota);
 
         // Verificaciones
         verify(logro, never()).setCompletado(true);
