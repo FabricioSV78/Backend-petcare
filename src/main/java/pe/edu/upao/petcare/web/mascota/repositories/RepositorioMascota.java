@@ -15,8 +15,8 @@ public interface RepositorioMascota extends JpaRepository<Mascota, Long> {
 
     Mascota findByIdMascota(Long idMascota);
 
-    //@Query("SELECT l FROM Logro l WHERE l IN (SELECT t.logro FROM Tarea t WHERE t IN (SELECT a.tarea FROM Accion a WHERE a.mascota.idMascota = :idMascota))")
-    //List<Logro> findLogrosByMascotaId(@Param("idMascota") Long idMascota);
+    @Query("SELECT l FROM Logro l WHERE l IN (SELECT t.logro FROM Tarea t WHERE t IN (SELECT a.tarea FROM Accion a WHERE a.mascota.idMascota = :idMascota))")
+    List<Logro> findLogrosByMascotaId(@Param("idMascota") Long idMascota);
 
 
 
